@@ -44,20 +44,22 @@ func propagateTranslate(l lang.Tag, v interface{}) interface{} {
 	typ := reflect.TypeOf(v)
 	switch typ.Kind() {
 	case reflect.Struct:
-		if typ.PkgPath() == "go-i18n/pkg/translation" && typ.Name() == "Message" {
+		if typ.PkgPath() == "github.com/aagu/go-i18n/pkg/translation" && typ.Name() == "Message" {
 			message := v.(Message)
 			return message.Translate(l)
 		}
-		return v
+		return Stringer(v)
 	case reflect.Map:
 		value := reflect.ValueOf(v)
 		for _, k := range value.MapKeys() {
 			value.SetMapIndex(k, reflect.ValueOf(propagateTranslate(l, value.MapIndex(k).Interface())))
 		}
+		return v
 	case reflect.Ptr:
 		return propagateTranslate(l, reflect.ValueOf(v).Elem().Interface())
+	default:
+		return Stringer(v)
 	}
-	return v
 }
 
 func (m Message) localeStringWithFallback(l lang.Tag) string {
@@ -74,7 +76,7 @@ func (m *Message) localeTemplateWithFallback(l lang.Tag) *template.Template {
 		return tmpl
 	} else {
 		if m.tmpl == nil {
-			parse, err := template.New(m.ID).Parse(m.Text)
+			parse, err := template.New(m.ID).Funcs(templateFuncMap).Parse(m.Text)
 			if err != nil {
 				panic(err)
 			}

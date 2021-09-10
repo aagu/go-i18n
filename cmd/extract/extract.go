@@ -69,7 +69,7 @@ func extractFunc(cmd *cobra.Command, args []string) {
 			return nil
 		}); err != nil {
 			cmd.PrintErrf("Extract message error: %v\n", err)
-			os.Exit(-1)
+			os.Exit(1)
 		}
 	}
 

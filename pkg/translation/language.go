@@ -52,7 +52,7 @@ func (lm *languageManager) localizedTemplate(l lang.Tag, t Message) (tmpl *templ
 		if !find {
 			return nil, false
 		}
-		parse, err := template.New(t.ID).Parse(str)
+		parse, err := template.New(t.ID).Funcs(templateFuncMap).Parse(str)
 		if err != nil {
 			return nil, false
 		}
