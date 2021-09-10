@@ -7,7 +7,9 @@ import (
 	"text/template"
 )
 
-var templateFuncMap = make(template.FuncMap)
+var templateFuncMap = template.FuncMap{
+	"stringer": Stringer,
+}
 
 func RegisterTemplateFunc(name string, fn interface{}) {
 	templateFuncMap[name] = fn

@@ -48,18 +48,15 @@ func propagateTranslate(l lang.Tag, v interface{}) interface{} {
 			message := v.(Message)
 			return message.Translate(l)
 		}
-		return Stringer(v)
 	case reflect.Map:
 		value := reflect.ValueOf(v)
 		for _, k := range value.MapKeys() {
 			value.SetMapIndex(k, reflect.ValueOf(propagateTranslate(l, value.MapIndex(k).Interface())))
 		}
-		return v
 	case reflect.Ptr:
 		return propagateTranslate(l, reflect.ValueOf(v).Elem().Interface())
-	default:
-		return Stringer(v)
 	}
+	return v
 }
 
 func (m Message) localeStringWithFallback(l lang.Tag) string {
