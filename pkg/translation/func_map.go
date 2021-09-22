@@ -24,6 +24,6 @@ func Stringer(v interface{}) string {
 		sprintf = strings.TrimRight(sprintf, "}")
 		return sprintf
 	default:
-		return fmt.Sprintf("%s", v)
+		return fmt.Sprintf("%v", v)
 	}
 }
